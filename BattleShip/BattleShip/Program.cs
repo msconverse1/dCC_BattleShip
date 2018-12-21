@@ -10,6 +10,9 @@ namespace BattleShip
     {
         static void Main(string[] args)
         {
+            GameBoard gameBoard = new GameBoard();
+            gameBoard.PlayGame();
+            
         }
     }
 }
