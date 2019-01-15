@@ -23,6 +23,7 @@ namespace BattleShip
             Console.ReadLine();
             Console.Clear();
             Player1.PlaceShip();
+            Console.Clear();
            Player1.gameBoard.UpdateGame();
             Console.ReadLine();
         }

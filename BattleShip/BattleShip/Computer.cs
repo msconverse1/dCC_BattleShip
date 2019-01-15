@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using static BattleShip.ShipType;
 namespace BattleShip
 {
     class Computer : User
@@ -11,53 +11,87 @@ namespace BattleShip
         public override void PlaceShip()
         {
             Random placement = new Random();
-            Location = new List<int>();
-            int max = gameBoard.GetPanel().Count - 1;
-            int dir =0;
-            int maxCol = gameBoard.boardSize-1;
-            int maxRow = gameBoard.boardSize - 1;
-            int number = placement.Next(0, max);
-            int placeleft = number - 1;
-            // Console.WriteLine("what direction would you like to place your Sub");
-            //return a direction that ship can be placed  
-            //foreach (Ship type in Ships)
-            //{
-
-            //}s
 
 
-       
-            switch (dir)
-            {
-                //down
-                case 1:
-                    gameBoard.GetPanel()[number].OccupationType = ShipType.OccupationType.Submarine;
-                    gameBoard.GetPanel()[number + gameBoard.boardSize].OccupationType = ShipType.OccupationType.Submarine;
-                    gameBoard.GetPanel()[number + gameBoard.boardSize+ gameBoard.boardSize].OccupationType = ShipType.OccupationType.Submarine;
+                // Console.WriteLine("what direction would you like to place your Sub");
+                //return a direction that ship can be placed  
+                //foreach (Ship type in Ships)
+                //{
+
+                //}s
+                foreach (var item in Ships)
+                {
+                if (!item.Isplaced)
+                {
+                    Console.Clear();
                     gameBoard.UpdateGame();
-                    break;
-                    //left
-                case 2:
-                    gameBoard.GetPanel()[number].OccupationType = ShipType.OccupationType.Submarine;
-                    gameBoard.GetPanel()[number -1].OccupationType = ShipType.OccupationType.Submarine;
-                    gameBoard.GetPanel()[number - 2].OccupationType = ShipType.OccupationType.Submarine;
-                    gameBoard.UpdateGame();
-                    break;
-                    //right
-                case 3:
-                    gameBoard.GetPanel()[number].OccupationType = ShipType.OccupationType.Submarine;
-                    gameBoard.GetPanel()[number + 1].OccupationType = ShipType.OccupationType.Submarine;
-                    gameBoard.GetPanel()[number +2].OccupationType = ShipType.OccupationType.Submarine;
-                    gameBoard.UpdateGame();
-                    break;
-                    //up
-                case 4:
-                    gameBoard.GetPanel()[number].OccupationType = ShipType.OccupationType.Submarine;
-                    gameBoard.GetPanel()[number - gameBoard.boardSize].OccupationType = ShipType.OccupationType.Submarine;
-                    gameBoard.GetPanel()[number - gameBoard.boardSize- gameBoard.boardSize].OccupationType = ShipType.OccupationType.Submarine;
-                    gameBoard.UpdateGame();
-                    break;
+                    int dir = placement.Next(0, 1);
+                    int x = placement.Next(0, 19);
+                    System.Threading.Thread.Sleep(20);
+                    int y = placement.Next(0, 19);
+                    if (x >= 20 || y >= 20)
+                    {
+                        Console.WriteLine("Can not place ship here");
+                        PlaceShip();
+                    }
+                    else if (gameBoard.Tile[x, y] != "E")
+                    {
+                        Console.WriteLine("Can not place ship here one is already here!");
+                        PlaceShip();
+                    }
+                    switch (dir)
+                    {
+                        case 0:
+                            if ((x + item.Width) >= 19 || (y + item.Width) >= 19)
+                            {
+                                Console.WriteLine("Pick a new direction ship will not fit");
+                                PlaceShip();
+                            }
+                            for (int i = 0; i < item.Width; i++)
+                            {
+                                if (gameBoard.Tile[x, y] != "E")
+                                {
+                                    Console.WriteLine("Can not place ship here one is already here!");
+                                    PlaceShip();
+                                }
+                                gameBoard.Tile[x, y] = GetDescription(item.OccupationType);
+                                y += 1;
+                            }
+                            item.Isplaced = true;
+                            Console.Clear();
+                            gameBoard.UpdateGame();
+                            break;
+                        case 1:
+                            if (x + item.Width >= 19 || y + item.Width >= 19)
+                            {
+                                Console.WriteLine("Pick a new direction ship will not fit");
+                                PlaceShip();
+                            }
+                            for (int i = 0; i < item.Width; i++)
+                            {
+                                if (gameBoard.Tile[x, y] != "E")
+                                {
+                                    Console.WriteLine("Can not place ship here one is already here!");
+                                    PlaceShip();
+                                }
+                                gameBoard.Tile[x, y] = GetDescription(item.OccupationType);
+                                x += 1;
+                            }
+                            item.Isplaced = true;
+                            Console.Clear();
+                            gameBoard.UpdateGame();
+                            break;
+
+                        default:
+                            Console.WriteLine("No correct information entered try again!");
+                            PlaceShip();
+                            break;
+                    }
+                }
             }
+       
+           
         }
-    }
+        }
+    
 }

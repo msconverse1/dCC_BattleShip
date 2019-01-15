@@ -11,58 +11,46 @@ namespace BattleShip
 {
     class Human : User
     {
-        //int prevX;
-        
+        int x;
+        int y;
+        int dir;
         public override void PlaceShip()
         {
-
             foreach (var item in Ships)
             {
                 if (!item.Isplaced)
                 {
-                    Console.Clear();
-                    gameBoard.UpdateGame();
-                    Console.WriteLine("Where would you like to place your {0} in X,Y format:(0-19)", item.Name);
-                    int.TryParse(Console.ReadLine(), out int x);
-                    int.TryParse(Console.ReadLine(), out int y);
-                    if (x >= 20 || y >= 20)
+                    CheckBounds(item);
+                    if (CheckforShip(x, y,dir,item))
                     {
-                        Console.WriteLine("Can not place ship here");
-                        PlaceShip();
+                        
+                        CheckBounds(item);
                     }
-                    else if (gameBoard.Tile[x, y] != "E")
-                    {
-                        Console.WriteLine("Can not place ship here one is already here!");
-                        PlaceShip();
-                    }
-                    Console.WriteLine("What Direction dou you want to place your {0}(Right:0 or Down:1)", item.Name);
-                    //0-1(right,down)
-                    int.TryParse(Console.ReadLine(), out int dir);
+
                     //return a direction that ship can be placed
                     switch (dir)
                     {
                         case 0:
-                            if (x + item.Width > 20 || y + item.Width > 20)
-                            {
-                                Console.WriteLine("Pick a new direction ship will not fit");
-                            }
                             for (int i = 0; i < item.Width; i++)
                             {
-                                
-                                gameBoard.Tile[x, y] = GetDescription(item.OccupationType);
-                                y += 1;
+                                while (gameBoard.Tile[x, y] == "E")
+                                {
+                                    gameBoard.Tile[x, y] = GetDescription(item.OccupationType);
+                                }
+            
+                            y += 1;
                             }
                             item.Isplaced = true;
                             gameBoard.UpdateGame();
                             break;
                         case 1:
-                            if (x + item.Width > 20 || y + item.Width > 20)
-                            {
-                                Console.WriteLine("Pick a new direction ship will not fit");
-                            }
+ 
                             for (int i = 0; i < item.Width; i++)
                             {
-                                gameBoard.Tile[x, y] = GetDescription(item.OccupationType);
+                                while (gameBoard.Tile[x, y] == "E")
+                                {
+                                    gameBoard.Tile[x, y] = GetDescription(item.OccupationType);
+                                }
                                 x += 1;
                             }
                             item.Isplaced = true;
@@ -70,11 +58,106 @@ namespace BattleShip
                             break;
 
                         default:
-
+                            Console.WriteLine("No correct information entered try again!");
+                            PlaceShip();
                             break;
                     }
                 }
             }
+        }
+        public void CheckBounds(Ship item)
+        {
+            //is ship on current input
+            do
+            {
+                gameBoard.UpdateGame();
+                Console.WriteLine("Where would you like to place your {0} in X,Y format:(0-19)", item.Name);
+                int.TryParse(Console.ReadLine(), out x);
+                int.TryParse(Console.ReadLine(), out y);
+                while (x > 19 || y > 19)
+                {
+                    gameBoard.UpdateGame();
+                    Console.WriteLine("Can not place ship this is out of bounds!");
+                    Console.WriteLine("Where would you like to place your {0} in X,Y format:(0-19)", item.Name);
+                    int.TryParse(Console.ReadLine(), out x);
+                    int.TryParse(Console.ReadLine(), out y);
+                }
+            } while (gameBoard.Tile[x, y] != "E");
+
+            //Select Direction to place current ship
+            gameBoard.UpdateGame();
+            Console.WriteLine("What Direction dou you want to place your {0}(Right:0 or Down:1)", item.Name);
+            //0-1(right,down)
+            int.TryParse(Console.ReadLine(), out dir);
+            //is current ship going out of bounds to the right
+            if (dir == 0 && (x + item.Width > 19 || y + item.Width - 1 > 19))
+            {
+                while (x > 19 || y + item.Width-1 > 19)
+                {
+                    do
+                    {
+                        gameBoard.UpdateGame();
+                        Console.WriteLine("Can not place ship this is out of bounds!");
+                        //0-1(right,down)
+                        Console.WriteLine("Where would you like to place your {0} in X,Y format:(0-19)", item.Name);
+                        int.TryParse(Console.ReadLine(), out x);
+                        int.TryParse(Console.ReadLine(), out y);
+                        Console.WriteLine("What Direction dou you want to place your {0}(Right:0 or Down:1)", item.Name);
+                        int.TryParse(Console.ReadLine(), out dir);
+                        if (dir == 1)
+                        {
+                            break;
+                        }
+                    } while (gameBoard.Tile[x, y] != "E");
+                    break;
+                }
+            }
+            //is ship going out of bounds if placed down
+             if (dir == 1 && x + item.Width > 19 || y + item.Width-1 > 19)
+            {
+                while (x + item.Width > 19)
+                {
+                    do
+                    {
+                        Console.WriteLine("Can not place ship this is out of bounds!");
+                        //0-1(right,down)
+                        Console.WriteLine("Where would you like to place your {0} in X,Y format:(0-19)", item.Name);
+                        int.TryParse(Console.ReadLine(), out x);
+                        int.TryParse(Console.ReadLine(), out y);
+                        Console.WriteLine("What Direction dou you want to place your {0}(Right:0 or Down:1)", item.Name);
+                        int.TryParse(Console.ReadLine(), out dir);
+                    } while (gameBoard.Tile[x, y] != "E");
+                }
+            }
+        }
+
+        public bool CheckforShip(int x,int y,int dir,Ship item)
+        {
+            if (dir == 1)
+            {
+                for (int i = 0; i < item.Width; i++)
+                {
+                    int temp = x + i;
+                    
+                    if (gameBoard.Tile[temp, y] != "E")
+                    {
+                        return true;
+                    }
+                }
+            }
+            if (dir == 0)
+            {
+                for (int i = 0; i < item.Width; i++)
+                {
+                    int temp = y + i;
+                    
+                    if (gameBoard.Tile[x, temp] != "E")
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }

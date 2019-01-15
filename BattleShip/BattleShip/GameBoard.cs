@@ -8,20 +8,10 @@ namespace BattleShip
 {
    public class GameBoard
     {
-        private List<Tiles> panel;
+     
         string[,] tile = new string[20, 20];
 
-       
-        public List<Tiles> GetPanel()
-        {
-            return panel;
-        }
-
-        public void SetPanel(List<Tiles> value)
-        {
-            
-            panel = value;
-        }
+ 
 
         public int boardSize = 20;
 
@@ -72,7 +62,7 @@ namespace BattleShip
         }
         public void UpdateGame()
         {
-
+            Console.Clear();
             PrintGameBoard();
         }
 
