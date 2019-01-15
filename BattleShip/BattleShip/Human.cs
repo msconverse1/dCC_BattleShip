@@ -22,41 +22,35 @@ namespace BattleShip
                 {
                     CheckBounds(item);
                     if (CheckforShip(x, y,dir,item))
-                    {
-                        
+                    {  
                         CheckBounds(item);
-                    }
-
-                    //return a direction that ship can be placed
+                    }  
                     switch (dir)
                     {
                         case 0:
                             for (int i = 0; i < item.Width; i++)
                             {
-                                while (gameBoard.Tile[x, y] == "E")
+                                int temp = y + i;
+                                while (gameBoard.Tile[x, temp] == "E")
                                 {
-                                    gameBoard.Tile[x, y] = GetDescription(item.OccupationType);
+                                    gameBoard.Tile[x, temp] = GetDescription(item.OccupationType);
                                 }
-            
-                            y += 1;
                             }
                             item.Isplaced = true;
                             gameBoard.UpdateGame();
                             break;
                         case 1:
- 
                             for (int i = 0; i < item.Width; i++)
                             {
-                                while (gameBoard.Tile[x, y] == "E")
+                                int temp = x + i;
+                                while (gameBoard.Tile[temp, y] == "E")
                                 {
-                                    gameBoard.Tile[x, y] = GetDescription(item.OccupationType);
+                                    gameBoard.Tile[temp, y] = GetDescription(item.OccupationType);
                                 }
-                                x += 1;
                             }
                             item.Isplaced = true;
                             gameBoard.UpdateGame();
                             break;
-
                         default:
                             Console.WriteLine("No correct information entered try again!");
                             PlaceShip();
@@ -131,33 +125,6 @@ namespace BattleShip
             }
         }
 
-        public bool CheckforShip(int x,int y,int dir,Ship item)
-        {
-            if (dir == 1)
-            {
-                for (int i = 0; i < item.Width; i++)
-                {
-                    int temp = x + i;
-                    
-                    if (gameBoard.Tile[temp, y] != "E")
-                    {
-                        return true;
-                    }
-                }
-            }
-            if (dir == 0)
-            {
-                for (int i = 0; i < item.Width; i++)
-                {
-                    int temp = y + i;
-                    
-                    if (gameBoard.Tile[x, temp] != "E")
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
+       
     }
 }

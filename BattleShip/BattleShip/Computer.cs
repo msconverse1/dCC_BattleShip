@@ -8,80 +8,59 @@ namespace BattleShip
 {
     class Computer : User
     {
+        
+        Random placement = new Random();
+        int dir;
+        int x;
+        int y;
+
         public override void PlaceShip()
         {
-            Random placement = new Random();
-
-
+            
+  
                 // Console.WriteLine("what direction would you like to place your Sub");
                 //return a direction that ship can be placed  
                 //foreach (Ship type in Ships)
                 //{
 
-                //}s
-                foreach (var item in Ships)
+            //}s
+            foreach (var item in Ships)
                 {
                 if (!item.Isplaced)
                 {
                     Console.Clear();
                     gameBoard.UpdateGame();
-                    int dir = placement.Next(0, 1);
-                    int x = placement.Next(0, 19);
-                    System.Threading.Thread.Sleep(20);
-                    int y = placement.Next(0, 19);
-                    if (x >= 20 || y >= 20)
+                    CheckBounds(item);
+                    if (CheckforShip(x, y, dir, item))
                     {
-                        Console.WriteLine("Can not place ship here");
-                        PlaceShip();
-                    }
-                    else if (gameBoard.Tile[x, y] != "E")
-                    {
-                        Console.WriteLine("Can not place ship here one is already here!");
-                        PlaceShip();
+                        CheckBounds(item);
                     }
                     switch (dir)
                     {
                         case 0:
-                            if ((x + item.Width) >= 19 || (y + item.Width) >= 19)
-                            {
-                                Console.WriteLine("Pick a new direction ship will not fit");
-                                PlaceShip();
-                            }
                             for (int i = 0; i < item.Width; i++)
                             {
-                                if (gameBoard.Tile[x, y] != "E")
+                                int temp = y + i;
+                                while (gameBoard.Tile[x, temp] == "E")
                                 {
-                                    Console.WriteLine("Can not place ship here one is already here!");
-                                    PlaceShip();
+                                    gameBoard.Tile[x, temp] = GetDescription(item.OccupationType);
                                 }
-                                gameBoard.Tile[x, y] = GetDescription(item.OccupationType);
-                                y += 1;
                             }
                             item.Isplaced = true;
-                            Console.Clear();
                             gameBoard.UpdateGame();
                             break;
                         case 1:
-                            if (x + item.Width >= 19 || y + item.Width >= 19)
-                            {
-                                Console.WriteLine("Pick a new direction ship will not fit");
-                                PlaceShip();
-                            }
                             for (int i = 0; i < item.Width; i++)
                             {
-                                if (gameBoard.Tile[x, y] != "E")
+                                int temp = x + i;
+                                while (gameBoard.Tile[temp, y] == "E")
                                 {
-                                    Console.WriteLine("Can not place ship here one is already here!");
-                                    PlaceShip();
+                                    gameBoard.Tile[temp, y] = GetDescription(item.OccupationType);
                                 }
-                                gameBoard.Tile[x, y] = GetDescription(item.OccupationType);
-                                x += 1;
                             }
                             item.Isplaced = true;
-                            Console.Clear();
                             gameBoard.UpdateGame();
                             break;
-
                         default:
                             Console.WriteLine("No correct information entered try again!");
                             PlaceShip();
@@ -92,6 +71,54 @@ namespace BattleShip
        
            
         }
-        }
-    
+        public void CheckBounds(Ship ship)
+        {
+            dir = placement.Next(0, 1);
+            //Seed x,y then check if its empty
+            do
+            {
+                x = placement.Next(0, 19);
+                System.Threading.Thread.Sleep(20);
+                y = placement.Next(0, 19);
+            } while (gameBoard.Tile[x,y] != "E");
+// check if ship goes out of bounds if it is places to the right
+            if (dir == 0 && (x + ship.Width > 19 || y + ship.Width - 1 > 19))
+            {
+                while (x > 19 || y + ship.Width - 1 > 19)
+                {
+                    do
+                    {
+                        gameBoard.UpdateGame();
+                        Console.WriteLine("Can not place ship this is out of bounds!");
+                        //0-1(right,down)
+                        x = placement.Next(0, 19);
+                        System.Threading.Thread.Sleep(20);
+                        y = placement.Next(0, 19);
+                        dir = placement.Next(0, 1);
+                        if (dir == 1)
+                        {
+                            break;
+                        }
+                    } while (gameBoard.Tile[x, y] != "E");
+                    break;
+                }
+            }
+            //is ship going out of bounds if placed down
+            if (dir == 1 && x + ship.Width > 19 || y + ship.Width - 1 > 19)
+            {
+                while (x + ship.Width > 19)
+                {
+                    do
+                    {
+                        Console.WriteLine("Can not place ship this is out of bounds!");
+                        //0-1(right,down)
+                        x = placement.Next(0, 19);
+                        System.Threading.Thread.Sleep(20);
+                        y = placement.Next(0, 19);
+                        dir = placement.Next(0, 1);
+                    } while (gameBoard.Tile[x, y] != "E");
+                }
+            }
+         }
+    }
 }

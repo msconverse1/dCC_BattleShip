@@ -39,7 +39,34 @@ namespace BattleShip
 
         }
 
+        public bool CheckforShip(int x, int y, int dir, Ship item)
+        {
+            if (dir == 1)
+            {
+                for (int i = 0; i < item.Width; i++)
+                {
+                    int temp = x + i;
 
+                    if (gameBoard.Tile[temp, y] != "E")
+                    {
+                        return true;
+                    }
+                }
+            }
+            if (dir == 0)
+            {
+                for (int i = 0; i < item.Width; i++)
+                {
+                    int temp = y + i;
+
+                    if (gameBoard.Tile[x, temp] != "E")
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
 
 
     }

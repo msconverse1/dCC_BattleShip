@@ -18,13 +18,13 @@ namespace BattleShip
         }
         public void PlayGame()
         {
-            Player1.gameBoard.PrintGameBoard();
+            Player2.gameBoard.PrintGameBoard();
             Console.WriteLine("\nPress Any Key to Continue");
             Console.ReadLine();
             Console.Clear();
-            Player1.PlaceShip();
+            Player2.PlaceShip();
             Console.Clear();
-           Player1.gameBoard.UpdateGame();
+           Player2.gameBoard.UpdateGame();
             Console.ReadLine();
         }
     }
