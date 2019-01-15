@@ -13,6 +13,7 @@ namespace BattleShip
         bool allShipsDestroyed;
        public GameBoard gameBoard;
         public List<Ship> Ships;
+        public List<int> Location;
         public User()
         {
             gameBoard = new GameBoard();

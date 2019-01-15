@@ -11,17 +11,22 @@ namespace BattleShip
         public override void PlaceShip()
         {
             Random placement = new Random();
+            Location = new List<int>();
             int max = gameBoard.GetPanel().Count - 1;
             int dir =0;
             int maxCol = gameBoard.boardSize-1;
             int maxRow = gameBoard.boardSize - 1;
             int number = placement.Next(0, max);
-            int placeleft = number - 1;           
-            Console.WriteLine("what direction would you like to place your Sub");
-            // string dir= Console.ReadLine();
-          //return a direction that ship can be placed
-            dir = gameBoard.CheckBoundrys( number,  dir,  placement, maxCol,maxRow);
-            dir = gameBoard.CheckIfVaildDirection(dir, number, maxCol, maxRow);
+            int placeleft = number - 1;
+            // Console.WriteLine("what direction would you like to place your Sub");
+            //return a direction that ship can be placed  
+            //foreach (Ship type in Ships)
+            //{
+
+            //}s
+
+
+       
             switch (dir)
             {
                 //down

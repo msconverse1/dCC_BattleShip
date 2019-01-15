@@ -8,6 +8,7 @@ namespace BattleShip
         public int Width;
         public int Hit;
         public OccupationType OccupationType { get; set; }
+        public bool Isplaced { get; set; }
         public bool IsSunk
         {
             get
